@@ -10,7 +10,7 @@ def preprocess(file_path, output_path):
     events = NanoEventsFactory.from_root(
         {file_path: 'Events'}, schemaclass=NanoAODSchema, mode="eager"
     ).events()
-    
+
     # input features
     variable = {'numMuon': ak.num(events.Muon)}
 
@@ -24,6 +24,9 @@ def preprocess(file_path, output_path):
             variable[i] = getattr(events[i.split('_')[0]], i.split('_')[1])
         else:
             variable[i] = getattr(events, i)
+
+        if 'PF' in i:
+            variable[i] = variable[i][(events.PF.puppiWeight>0) | (events.PF.puppiWeightNoLep>0)]
 
     variable['PF_px'] = variable['PF_pt'] * np.cos(variable['PF_phi'])
     variable['PF_py'] = variable['PF_pt'] * np.sin(variable['PF_phi'])
@@ -43,6 +46,7 @@ def preprocess(file_path, output_path):
     variable['truth_phi'] = np.arctan2(variable['truth_py'], variable['truth_px'])
 
     # store the variables in a Parquet file
+    os.system(f'rm -rf {output_path}')
     ak.to_parquet(array=ak.Array(variable), destination=output_path, compression='zstd')
 
 
