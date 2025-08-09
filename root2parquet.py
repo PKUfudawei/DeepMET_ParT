@@ -30,7 +30,7 @@ def preprocess(file_path, output_path):
 
     variable['PF_px'] = variable['PF_pt'] * np.cos(variable['PF_phi'])
     variable['PF_py'] = variable['PF_pt'] * np.sin(variable['PF_phi'])
-    
+
 
     # ground truth information
     variable['muons_px'] = ak.sum(events.Muon.pt * np.cos(events.Muon.phi), axis=1)
