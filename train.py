@@ -24,7 +24,7 @@ def parse_arguments():
     parser.add_argument('--lr', type=float, default=1e-4)
     parser.add_argument('--project', type=str, default='MET')
     parser.add_argument('--total_epochs', type=int, default=20)
-    parser.add_argument('--ema_start', type=int, default=1000)
+    parser.add_argument('--ema_start', type=int, default=100)
     parser.add_argument('--ema_decay', type=float, default=0.999)
     parser.add_argument('--use_wandb', type=int, default=1)
     parser.add_argument('--num_workers', type=int, default=8)
@@ -37,6 +37,7 @@ def parse_arguments():
     args.use_wandb = bool(args.use_wandb)
     args.name = f'b={args.batch_size}_lr={args.lr}_EMAdecay={args.ema_decay}' + ('_distill' if args.pretrained_model is not None else '')
     return args
+
 
 def _check_finite(t, name):
     if not torch.isfinite(t).all():
