@@ -23,7 +23,7 @@ def parse_arguments():
     parser.add_argument('--max_PF_num', type=int, default=2**10)
     parser.add_argument('--lr', type=float, default=1e-4)
     parser.add_argument('--project', type=str, default='MET')
-    parser.add_argument('--total_epochs', type=int, default=20)
+    parser.add_argument('--total_epochs', type=int, default=10)
     parser.add_argument('--ema_start', type=int, default=100)
     parser.add_argument('--ema_decay', type=float, default=0.999)
     parser.add_argument('--use_wandb', type=int, default=1)
@@ -164,7 +164,7 @@ if __name__ == "__main__":
                     wandb.log(log_train, step=step)
 
                 # test
-                if step % (len(dataloader_train)//10) == 0:
+                if step % (len(dataloader_train)//20) == 0:
                     try:
                         X_test, Y_test = next(test_loader)
                     except StopIteration:
