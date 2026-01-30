@@ -212,3 +212,4 @@ checkpoints/
 wandb/
 *.root
 *.hdf5
+.vscode/
