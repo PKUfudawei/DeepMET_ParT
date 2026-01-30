@@ -13,7 +13,9 @@ def cycle(dataloader):
 
 
 class Dataset(data.Dataset):
-    def __init__(self, files, max_PF_num=None, dtype=torch.float32):
+    def __init__(self, files, max_PF_num=None, dtype=torch.float32, print_info=True):
+        if print_info:
+            print("Lazy loading data")
         super().__init__()
         self.files = [files] if type(files) is not list else files
         self.max_PF_num = max_PF_num
@@ -23,11 +25,14 @@ class Dataset(data.Dataset):
         self.lazy_files = [h5py.File(f, 'r') for f in self.files]
         self.features = self.lazy_files[0].attrs['PF_features'].decode('utf-8').split(',')
         self.truths = self.lazy_files[0].attrs['event_truths'].decode('utf-8').split(',')
-
         self.file_sizes = [f.attrs['n_events'] for f in self.lazy_files]
         self.accumulated_sizes = np.cumsum([0] + self.file_sizes)
         self.total_size = self.accumulated_sizes[-1]
-        print(f"=> Lazy loading {self.total_size} events from {len(self.files)} files")
+
+        if print_info:
+            print(f"\tLazy loaded {self.total_size:,} events from {len(self.files)} files with maxPFnum = {self.max_PF_num}")
+            print(f"\tInput features: {','.join(self.features)}")
+            print(f"\tGround truths: {', '.join(self.truths)}")
 
 
     def __len__(self):

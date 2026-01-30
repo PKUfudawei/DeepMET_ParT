@@ -12,11 +12,11 @@ def fix_seeds(seed=42):
     #torch.backends.cudnn.benchmark = False
 
 
-def save_model(model, step, output_save_dir):
+def save_model(model, epoch, output_save_dir):
     os.makedirs(output_save_dir, exist_ok=True)
 
     # save yaml file for later runs
-    save_dir_model = os.path.join(output_save_dir, f'checkpoint_{step}.pt')
+    save_dir_model = os.path.join(output_save_dir, f'checkpoint_{epoch}.pt')
     save_obj = {'model': model.state_dict()}
     # save model to path
     with open(save_dir_model, 'wb') as f:
